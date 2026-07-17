@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corpobear.github.io/MCIFT-Benchmarks/schemas/result-summary.schema.json",
+  "title": "MCIFT benchmark result summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["benchmark_name", "benchmark_version", "run_id", "provenance_manifest", "results"],
+  "properties": {
+    "benchmark_name": {"type": "string"},
+    "benchmark_version": {"type": "string"},
+    "run_id": {"type": "string"},
+    "provenance_manifest": {"type": "string"},
+    "results": {"type": "object", "description": "Metric names and values are frozen by the reviewed protocol."}
+  }
+}
+

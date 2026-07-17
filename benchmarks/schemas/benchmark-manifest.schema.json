@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://corpobear.github.io/MCIFT-Benchmarks/schemas/benchmark-manifest.schema.json",
+  "title": "MCIFT benchmark provenance manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "benchmark_name", "benchmark_version", "dataset_name", "dataset_manifest_sha256",
+    "repository_url", "git_commit", "dirty_worktree", "image_reference", "image_digest",
+    "config_path", "config_sha256", "python_version", "dependencies", "azure_resource_type",
+    "azure_compute_size", "started_at_utc", "completed_at_utc", "seed", "input_location",
+    "output_location", "status", "artifacts"
+  ],
+  "properties": {
+    "benchmark_name": {"type": "string", "minLength": 1},
+    "benchmark_version": {"type": "string", "minLength": 1},
+    "dataset_name": {"type": "string", "minLength": 1},
+    "dataset_manifest_sha256": {"$ref": "#/$defs/sha256"},
+    "repository_url": {"type": "string", "format": "uri"},
+    "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "dirty_worktree": {"type": "boolean"},
+    "image_reference": {"type": "string", "minLength": 1},
+    "image_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "config_path": {"type": "string", "minLength": 1},
+    "config_sha256": {"$ref": "#/$defs/sha256"},
+    "python_version": {"type": "string", "minLength": 1},
+    "dependencies": {"type": "object", "additionalProperties": {"type": "string"}},
+    "azure_resource_type": {"type": "string", "minLength": 1},
+    "azure_compute_size": {"type": "string", "minLength": 1},
+    "started_at_utc": {"type": "string", "format": "date-time"},
+    "completed_at_utc": {"type": "string", "format": "date-time"},
+    "seed": {"type": "integer"},
+    "input_location": {"type": "string", "minLength": 1},
+    "output_location": {"type": "string", "minLength": 1},
+    "status": {"enum": ["failed", "completed", "approved"]},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+      }
+    }
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+}
+

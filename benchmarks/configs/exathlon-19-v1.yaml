@@ -1,0 +1,27 @@
+benchmark:
+  name: exathlon-anomaly-propagation
+  version: exathlon-19-v1
+  status: unresolved-scientific-protocol
+dataset:
+  identifier: exathlon
+  expected_source: "https://github.com/exathlonbenchmark/exathlon"
+  mode: curated-19-feature
+resampling_interval: unresolved
+missing_data_policy: unresolved
+split_policy: unresolved
+anomaly_interval_semantics: unresolved
+baselines:
+  - rolling_z_score
+  - ewma
+  - pca_reconstruction_error
+  - isolation_forest
+mcift:
+  topology_adapter: unresolved
+  relationship_mapping: unresolved
+  status: blocks-run
+event_evaluation:
+  aggregation: unresolved
+  matching: unresolved
+output:
+  schema: schemas/result-summary.schema.json
+seed: 20260101

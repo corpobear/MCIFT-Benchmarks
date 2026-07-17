@@ -1,0 +1,23 @@
+$schema: https://azuremlschemas.azureedge.net/latest/commandJob.schema.json
+display_name: mcift-exathlon-manual
+experiment_name: mcift-public-benchmarks
+code: ../
+command: >-
+  python -m mcift_benchmarks run
+  --config configs/exathlon-19-v1.yaml
+  --input ${{inputs.dataset_uri}}
+  --output ${{outputs.run_uri}}
+environment:
+  image: ghcr.io/corpobear/mcift-benchmarks:sha-unpublished
+compute: azureml:cpu-mcift-exathlon
+inputs:
+  dataset_uri:
+    type: uri_folder
+outputs:
+  run_uri:
+    type: uri_folder
+identity:
+  type: user_identity
+limits:
+  timeout: 7200
+
