@@ -1,0 +1,45 @@
+name: Provision benchmark infrastructure
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Deployment mode
+        type: choice
+        options: [what-if, apply]
+        default: what-if
+      region:
+        description: Azure region
+        default: westeurope
+      budget_amount:
+        description: Monthly alert budget in billing currency
+        default: '20'
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  what-if:
+    if: inputs.mode == 'what-if'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - run: az bicep build --file infra/bicep/main.bicep
+      - run: az deployment sub what-if --location '${{ inputs.region }}' --name mcift-benchmark-what-if --template-file infra/bicep/main.bicep --parameters location='${{ inputs.region }}' monthlyBudgetAmount='${{ inputs.budget_amount }}'
+  apply:
+    if: inputs.mode == 'apply'
+    environment: azure-benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - run: az bicep build --file infra/bicep/main.bicep
+      - run: az deployment sub what-if --location '${{ inputs.region }}' --name mcift-benchmark-preapply --template-file infra/bicep/main.bicep --parameters location='${{ inputs.region }}' monthlyBudgetAmount='${{ inputs.budget_amount }}'
+      - run: az deployment sub create --location '${{ inputs.region }}' --name mcift-benchmark-prepare --template-file infra/bicep/main.bicep --parameters location='${{ inputs.region }}' monthlyBudgetAmount='${{ inputs.budget_amount }}'
