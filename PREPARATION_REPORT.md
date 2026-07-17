@@ -55,8 +55,7 @@ Apps job was left deployed.
   idle scale-down. `Standard_D8s_v5` is documented only as an optional similar-size
   fallback; it was not substituted.
 - GHCR image: build workflow and Dockerfile exist, but no image was published.
-- GitHub repository variables and the protected `azure-benchmarks` environment:
-  not configured because authenticated GitHub CLI/API access was unavailable.
+- GHCR image publication remains pending; repository automation is configured.
 
 ## 4. Active subscription and region
 
@@ -93,9 +92,9 @@ repo:corpobear/MCIFT-Benchmarks:environment:azure-benchmarks
 The application has one federated credential and zero password credentials.
 Roles were verified: resource-group Contributor, resource-group Role Based Access
 Control Administrator (needed for Bicep-owned scoped RBAC), and Blob Data Reader
-on `approved-releases` only. GitHub-side variables and required-reviewer protection
-remain a manual step because GitHub authentication was unavailable. All identifier
-values are withheld from Git.
+on `approved-releases` only. The GitHub `azure-benchmarks` environment was created
+with reviewer protection, and all seven required repository variables were set.
+Their values are withheld from Git and from command output.
 
 ## 8. Compute and execution status
 
@@ -157,9 +156,8 @@ validation and what-if succeeded before apply. No validation processed real data
 - West Europe Container Apps managed-environment capacity blocked creation twice.
 - `Standard_D8as_v5` was unavailable for this subscription; no larger or more
   expensive size was selected.
-- GitHub authentication was unavailable, blocking repository variables,
-  environment protection, push, image workflow execution, and draft PR creation
-  until a later authenticated step.
+- The local Docker Linux engine was unavailable, so local image construction
+  could not be verified. The manual GHCR workflow is ready but was not invoked.
 - Azure permissions were sufficient for resources, Entra federation, and scoped RBAC.
 
 ## 12. Idle monthly cost categories
@@ -220,8 +218,7 @@ synthetic arrays and are software tests, not scientific evidence.
 
 ## Delivery status
 
-Branch: `infra/public-benchmarks`. Draft PR: pending GitHub authentication and
-initial push. Azure preparation is complete except for the explicitly documented
-Container Apps capacity and AML SKU restriction. Both scientific workloads remain
-unexecuted.
-
+Branch: `infra/public-benchmarks`. Draft PR:
+https://github.com/corpobear/MCIFT-Benchmarks/pull/1. Azure preparation is complete
+except for the explicitly documented Container Apps capacity and AML SKU
+restriction. Both scientific workloads remain unexecuted.
