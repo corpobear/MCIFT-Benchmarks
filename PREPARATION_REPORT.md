@@ -75,10 +75,11 @@ registration during the first check and subsequently supported deployment.
 ## 6. Container image
 
 Prepared publication name: `ghcr.io/corpobear/mcift-benchmarks`.
-Current infrastructure placeholder: `sha-unpublished`. No SHA tag or benchmark
-image digest exists because the local Docker daemon was unavailable and the build
-workflow was not run. The pinned Linux AMD64 Python base manifest was resolved,
-but that base digest is not a benchmark-image digest.
+Current infrastructure placeholder: `sha-unpublished`. No published SHA tag or
+benchmark image digest exists because the manual publication workflow was not run.
+The local Docker daemon was unavailable, but GitHub CI successfully built the
+Linux image without running a benchmark. The pinned Python base digest is not a
+published benchmark-image digest.
 
 ## 7. OIDC status
 
@@ -148,8 +149,9 @@ secret-assignment pattern scan                       # none found
 ```
 
 The local image build could not run because Docker Desktop's Linux engine pipe was
-absent. CI will build the image without running either benchmark. Azure deployment
-validation and what-if succeeded before apply. No validation processed real data.
+absent. GitHub push and pull-request CI both passed, including a Linux container
+build without running either benchmark. Azure deployment validation and what-if
+succeeded before apply. No validation processed real data.
 
 ## 11. Quota and permission blockers
 
