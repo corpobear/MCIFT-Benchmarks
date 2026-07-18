@@ -61,20 +61,30 @@ def load_manifest(manifest_uri: str) -> tuple[list[dict[str, object]], str, str]
     payload = bytes(blob_client(manifest_uri).download_blob().readall())
     manifest = json.loads(payload)
     entries = manifest.get("files", [])
-    if not isinstance(entries, list) or len(entries) != 94:
-        raise ValueError("Exathlon aggregate manifest must contain 94 files")
+    if not isinstance(entries, list) or len(entries) < 94:
+        raise ValueError("Exathlon aggregate manifest is incomplete")
     base_uri = manifest_uri.rsplit("/", 2)[0]
     return entries, hashlib.sha256(payload).hexdigest(), base_uri
 
 
-def _read_zip_csv(uri: str) -> tuple[str, pd.DataFrame]:
-    payload = bytes(blob_client(uri).download_blob(max_concurrency=4).readall())
+def _read_zip_csv(uris: list[str]) -> tuple[str, pd.DataFrame]:
+    payload = b"".join(
+        bytes(blob_client(uri).download_blob(max_concurrency=4).readall()) for uri in uris
+    )
     with zipfile.ZipFile(io.BytesIO(payload)) as archive:
-        names = [name for name in archive.namelist() if name.lower().endswith(".csv")]
-        if len(names) != 1:
-            raise ValueError(f"expected one CSV in {uri}")
-        name = names[0]
-        with archive.open(name) as handle:
+        members = [
+            member for member in archive.infolist() if member.filename.lower().endswith(".csv")
+        ]
+        if len(members) != 1:
+            raise ValueError(f"expected one CSV in archive ending {uris[-1]}")
+        member = members[0]
+        if len(uris) > 1:
+            local_header = payload.find(b"PK\x03\x04")
+            if local_header < 0:
+                raise ValueError(f"split ZIP local header not found for {uris[-1]}")
+            member.header_offset = local_header
+        name = member.filename
+        with archive.open(member) as handle:
             header = pd.read_csv(handle, nrows=0).columns.tolist()
         normalized = {_normalized_column(column): column for column in header}
         wanted = ["t", *IDENTITY_FEATURES, *DIFFERENCE_FEATURES]
@@ -86,7 +96,7 @@ def _read_zip_csv(uri: str) -> tuple[str, pd.DataFrame]:
         if missing:
             raise ValueError(f"missing official Exathlon features in {name}: {missing}")
         raw_columns = [normalized[column] for column in wanted]
-        with archive.open(name) as handle:
+        with archive.open(member) as handle:
             frame = pd.read_csv(handle, usecols=raw_columns)
         frame = frame.rename(
             columns={raw: normalized_name for normalized_name, raw in normalized.items()}
@@ -108,8 +118,8 @@ def _read_ground_truth_zip(uri: str) -> tuple[str, pd.DataFrame]:
     return name, frame
 
 
-def load_trace(uri: str) -> Trace:
-    name, frame = _read_zip_csv(uri)
+def load_trace(uris: list[str]) -> Trace:
+    name, frame = _read_zip_csv(uris)
     timestamps = frame.pop("t").to_numpy(dtype=np.int64)
     output: dict[str, pd.Series[float]] = {}
     for feature in IDENTITY_FEATURES:

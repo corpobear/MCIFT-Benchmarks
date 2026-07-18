@@ -227,9 +227,22 @@ def run_exathlon(
     ground_truth = exathlon.load_ground_truth(f"{base_uri}/{ground_entry['path']}")
     traces: list[exathlon.Trace] = []
     for entry in selected:
-        if str(entry["path"]).endswith("ground_truth.zip"):
+        original_path = str(entry["original_path"])
+        if original_path.endswith("ground_truth.zip") or not original_path.endswith(".zip"):
             continue
-        traces.append(exathlon.load_trace(f"{base_uri}/{entry['path']}"))
+        stem = original_path.removesuffix(".zip")
+        segments = sorted(
+            (
+                candidate
+                for candidate in selected
+                if str(candidate["original_path"]).startswith(stem + ".z")
+                and not str(candidate["original_path"]).endswith(".zip")
+            ),
+            key=lambda candidate: str(candidate["original_path"]),
+        )
+        part_uris = [f"{base_uri}/{candidate['path']}" for candidate in segments]
+        part_uris.append(f"{base_uri}/{entry['path']}")
+        traces.append(exathlon.load_trace(part_uris))
     traces.sort(key=lambda trace: trace.name)
     normal = [trace for trace in traces if trace.trace_type == 0]
     first = max(1, int(len(normal) * 0.60))

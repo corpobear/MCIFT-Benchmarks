@@ -14,12 +14,12 @@ $headers = @{ 'User-Agent' = 'mcift-benchmark-dataset-stager/1.0' }
 $tree = Invoke-RestMethod -Uri $treeUri -Headers $headers
 $files = @(
   $tree.tree |
-    Where-Object { $_.type -eq 'blob' -and $_.path -match '^data/raw/.+\.zip$' } |
+    Where-Object { $_.type -eq 'blob' -and $_.path -match '^data/raw/.+\.(zip|z[0-9]+)$' } |
     Sort-Object path
 )
-if ($files.Count -eq 0) { throw 'No Exathlon raw ZIP files were found at the official source.' }
+if ($files.Count -eq 0) { throw 'No Exathlon raw archive files were found at the official source.' }
 
-Write-Host "Official Exathlon ZIP files discovered: $($files.Count)"
+Write-Host "Official Exathlon archive files discovered: $($files.Count)"
 Write-Host 'Dataset license: CC BY-NC-SA 4.0. Staging destination remains private.'
 $confirmation = if ([string]::IsNullOrEmpty($Confirmation)) {
   Read-Host 'Type STAGE_EXATHLON_ALL to continue'
