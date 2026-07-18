@@ -1,7 +1,7 @@
 benchmark:
   name: ims-early-warning
   version: ims-set2-v1
-  status: unresolved-scientific-protocol
+  status: approved-for-run
 dataset:
   identifier: nasa-ims-bearing
   expected_source: "NASA Prognostics Data Repository / IMS Bearings"
@@ -11,9 +11,9 @@ dataset:
   samples_per_recording: 20480
   sampling_rate_source: "NASA NTRS 20205001055 reports 20 kHz; operator must reconcile the 20,480 samples/file against the bundled README at staging"
 preprocessing:
-  detrend: unresolved
-  window_samples: unresolved
-  overlap: unresolved
+  detrend: mean_per_recording
+  window_samples: 20480
+  overlap: 0
 conventional_features:
   - rms
   - peak_to_peak
@@ -25,18 +25,21 @@ mcift:
   adapter: inferred_exchange_v1
   source_repository_commit: e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687
   observable_map: scaled_log_rms_spectral_centroid_shared_bin_phase
-  channel_scale_rule: unresolved
-  sigma_information_rule: unresolved
-  sigma_angular_frequency_rule: unresolved
+  channel_scale_rule: median_channel_rms_on_reference_with_epsilon_floor
+  sigma_information_rule: robust_mad_of_reference_pairwise_information_differences
+  sigma_angular_frequency_rule: robust_mad_of_reference_pairwise_frequency_differences
   coupling_g: 1.0
   densification_eta: 1.0
-  approval: unresolved
-  status: blocks-run
+  score: frobenius_distance_from_reference_median_exchange_matrix
+  approval: operator-approved-2026-07-18
+  status: approved-for-run
 threshold_policy:
-  method: unresolved
-  healthy_reference_period: unresolved
-  stable_warning_definition: unresolved
-  false_alarm_definition: unresolved
+  method: upper_0.995_quantile_on_disjoint_calibration_period
+  healthy_reference_period: first_10_percent_chronological_recordings
+  calibration_period: next_10_percent_chronological_recordings
+  stable_warning_definition: first_3_consecutive_threshold_exceedances
+  false_alarm_definition: threshold_exceedance_before_end_of_calibration_period
+  failure_reference: final_recording_time_experiment_ended_after_bearing_failure
 output:
   schema: schemas/result-summary.schema.json
 seed: 20260101

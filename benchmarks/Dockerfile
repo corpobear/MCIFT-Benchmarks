@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source="https://github.com/corpobear/MCIFT-Benchm
       org.opencontainers.image.revision=$VCS_REF \
       org.opencontainers.image.licenses="AGPL-3.0-only"
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PYTHONPATH=/app/src
+RUN apt-get update && apt-get install --yes --no-install-recommends libarchive-tools \
+    && rm -rf /var/lib/apt/lists/*
 RUN groupadd --gid 10001 app && useradd --uid 10001 --gid app --create-home app
 WORKDIR /app
 COPY requirements.lock ./

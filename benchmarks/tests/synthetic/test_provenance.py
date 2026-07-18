@@ -9,9 +9,7 @@ def test_publication_rejects_missing_provenance() -> None:
         validate_publication_manifest({"status": "approved"})
 
 
-def test_frozen_config_reports_scientific_gaps() -> None:
+def test_approved_config_has_no_scientific_gaps() -> None:
     config = load_config("benchmarks/configs/ims-set2-v1.yaml")
     gaps = unresolved_paths(config.raw)
-    assert "mcift.approval" in gaps
-    assert "mcift.sigma_information_rule" in gaps
-    assert "threshold_policy.method" in gaps
+    assert gaps == []

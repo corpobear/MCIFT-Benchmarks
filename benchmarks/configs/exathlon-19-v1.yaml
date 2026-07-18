@@ -1,15 +1,43 @@
 benchmark:
   name: exathlon-anomaly-propagation
   version: exathlon-19-v1
-  status: unresolved-scientific-protocol
+  status: approved-for-run
 dataset:
   identifier: exathlon
   expected_source: "https://github.com/exathlonbenchmark/exathlon"
   mode: curated-19-feature
-resampling_interval: unresolved
-missing_data_policy: unresolved
-split_policy: unresolved
-anomaly_interval_semantics: unresolved
+resampling_interval: native_1_second
+missing_data_policy: official_exathlon_nan_to_inactive_minus_one_then_active_executor_average
+split_policy: sorted_undisturbed_traces_60_percent_reference_20_percent_calibration_20_percent_test
+anomaly_interval_semantics: inclusive_start_and_inclusive_root_or_extended_effect_end
+trace_scope: official_apps_1_to_6_9_to_10
+window:
+  samples: 60
+  stride: 30
+features:
+  source: official_exathlon_spark_bundle_0
+  identity:
+    - driver_StreamingMetrics_streaming_lastCompletedBatch_processingDelay_value
+    - driver_StreamingMetrics_streaming_lastCompletedBatch_schedulingDelay_value
+    - driver_StreamingMetrics_streaming_lastCompletedBatch_totalDelay_value
+  difference_1:
+    - driver_StreamingMetrics_streaming_totalCompletedBatches_value
+    - driver_StreamingMetrics_streaming_totalProcessedRecords_value
+    - driver_StreamingMetrics_streaming_totalReceivedRecords_value
+    - driver_StreamingMetrics_streaming_lastReceivedBatch_records_value
+    - driver_BlockManager_memory_memUsed_MB_value
+    - driver_jvm_heap_used_value
+    - node5_CPU_ALL_Idle%
+    - node6_CPU_ALL_Idle%
+    - node7_CPU_ALL_Idle%
+    - node8_CPU_ALL_Idle%
+  active_executor_average_then_difference_1:
+    - executor_filesystem_hdfs_write_ops_value
+    - executor_cpuTime_count
+    - executor_runTime_count
+    - executor_shuffleRecordsRead_count
+    - executor_shuffleRecordsWritten_count
+    - jvm_heap_used_value
 baselines:
   - rolling_z_score
   - ewma
@@ -19,17 +47,20 @@ mcift:
   topology_adapter: inferred_exchange_complete_graph_v1
   source_repository_commit: e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687
   observable_map: scaled_log_rms_spectral_centroid_shared_bin_phase
-  channel_scale_rule: unresolved
+  channel_scale_rule: reference_feature_mad_with_epsilon_floor
   relationship_mapping: pairwise_exchange_complete_graph
-  sigma_information_rule: unresolved
-  sigma_angular_frequency_rule: unresolved
+  sigma_information_rule: robust_mad_of_reference_pairwise_information_differences
+  sigma_angular_frequency_rule: robust_mad_of_reference_pairwise_frequency_differences
   coupling_g: 1.0
   densification_eta: 1.0
-  approval: unresolved
-  status: blocks-run
+  score: frobenius_distance_from_reference_median_exchange_matrix
+  approval: operator-approved-2026-07-18
+  status: approved-for-run
 event_evaluation:
-  aggregation: unresolved
-  matching: unresolved
+  aggregation: merge_overlapping_positive_windows_per_trace
+  matching: one_to_one_interval_overlap_zero_tolerance
+threshold_policy:
+  method: upper_0.995_quantile_on_disjoint_undisturbed_calibration_windows
 output:
   schema: schemas/result-summary.schema.json
 seed: 20260101

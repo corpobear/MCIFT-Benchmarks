@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 
 from mcift_benchmarks.config import load_config, require_scientifically_resolved, unresolved_paths
 from mcift_benchmarks.reporting.static_report import build_static_report
+from mcift_benchmarks.runner import execute
 from mcift_benchmarks.storage import require_safe_blob_uri
 
 
@@ -50,7 +51,8 @@ def main(argv: list[str] | None = None) -> int:
         require_safe_blob_uri(args.input)
         require_safe_blob_uri(args.output)
         require_scientifically_resolved(config)
-        raise NotImplementedError("scientific run blocked until MCIFT adapter is reviewed")
+        print(json.dumps(execute(config, args.input, args.output), indent=2))
+        return 0
     if args.command == "preflight-run":
         config = load_config(args.config)
         require_safe_blob_uri(args.input)
