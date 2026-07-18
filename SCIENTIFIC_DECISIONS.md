@@ -5,7 +5,8 @@ values plus a source/rationale; do not answer by asking engineering to guess.
 
 ## Shared MCIFT mapping
 
-1. Approve or replace `MCIFT_MAPPING_PROPOSAL.md`, derived from source commit `e1d93e1`.
+1. Approve or replace `MCIFT_MAPPING_PROPOSAL.md`, derived from source commit
+   `e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687`.
 2. Healthy/training-only per-channel scale estimator, units, normalization,
    topology, boundary conditions, and parameter provenance.
 3. Which parameters are derived, fitted, assumed, or fixed before evaluation.

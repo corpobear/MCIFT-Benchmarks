@@ -46,11 +46,10 @@ $scriptPath = Join-Path $PSScriptRoot 'stage-dataset-direct.ps1'
 $uploadJobs = @()
 try {
   $existingBlobs = @{}
-  $listedBlobs = @(
-    az storage blob list --auth-mode login --account-name $storageAccount `
-      --container-name datasets --prefix 'exathlon/source/' `
-      --include m --output json --only-show-errors | ConvertFrom-Json
-  )
+  $listedJson = az storage blob list --auth-mode login --account-name $storageAccount `
+    --container-name datasets --prefix 'exathlon/source/' `
+    --include m --output json --only-show-errors
+  $listedBlobs = ($listedJson -join "`n") | ConvertFrom-Json
   foreach ($blob in $listedBlobs) { $existingBlobs[$blob.name] = $blob }
 
   $pending = [Collections.Generic.Queue[object]]::new()
@@ -108,11 +107,10 @@ try {
   Remove-Item -LiteralPath $runtimeRoot -Recurse -Force
 }
 
-$allBlobs = @(
-  az storage blob list --auth-mode login --account-name $storageAccount `
-    --container-name datasets --prefix 'exathlon/source/' `
-    --include m --output json --only-show-errors | ConvertFrom-Json
-)
+$allBlobsJson = az storage blob list --auth-mode login --account-name $storageAccount `
+  --container-name datasets --prefix 'exathlon/source/' `
+  --include m --output json --only-show-errors
+$allBlobs = ($allBlobsJson -join "`n") | ConvertFrom-Json
 $blobIndex = @{}
 foreach ($blob in $allBlobs) { $blobIndex[$blob.name] = $blob }
 $entries = @()

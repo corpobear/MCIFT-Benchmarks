@@ -2,7 +2,8 @@
 
 Status: **engineering inference requiring scientific approval before execution**.
 
-Source inspected at `corpobear/Quantum-field-hypothesis` commit `e1d93e1`.
+Source inspected at `corpobear/Quantum-field-hypothesis` commit
+`e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687`.
 The source calls these equations speculative toy-model mechanics.
 
 ## Source-derived equations

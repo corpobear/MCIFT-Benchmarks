@@ -23,7 +23,7 @@ conventional_features:
   - frequency_band_energy
 mcift:
   adapter: inferred_exchange_v1
-  source_repository_commit: e1d93e1
+  source_repository_commit: e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687
   observable_map: scaled_log_rms_spectral_centroid_shared_bin_phase
   channel_scale_rule: unresolved
   sigma_information_rule: unresolved
