@@ -13,6 +13,15 @@ az login
 ./infra/scripts/bootstrap-azure.ps1 -Mode apply -BudgetContactEmails operator@example.org
 ```
 
+## Direct dataset staging
+
+`stage-dataset-direct.ps1` streams a public HTTPS object directly into the private
+`datasets` container without retaining a complete local copy. It calculates
+SHA-256 while streaming, commits a manifest, uses retryable block uploads and the
+current Azure CLI Entra identity, and rejects source URLs containing query
+strings so signed tokens cannot enter manifests. The operator needs Blob Data
+Contributor on the `datasets` container.
+
 The script displays the active subscription, target group/region, provider state,
 and relevant VM-family quota before compile, validate, and what-if. Only `-Mode
 apply` deploys. If the preferred `Standard_D8as_v5` low-priority size is blocked,
