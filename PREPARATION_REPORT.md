@@ -4,6 +4,12 @@ Prepared 2026-07-17. This report contains no scientific benchmark result.
 Configuration-like identifiers that belong in GitHub variables are intentionally
 withheld from this public repository.
 
+Dataset staging update, 2026-07-18: the official NASA IMS archive was streamed
+directly into private Blob Storage without retaining a complete local copy. The
+blob is `datasets/ims/source/IMS.zip`, its size is 1,061,902,801 bytes, and its
+SHA-256 is `6cb42c263b0281c725abf99f4b9fcf49915c949f31dbd2333877dc2e06ce9ec2`.
+The private manifest is `datasets/ims/manifests/IMS.zip.manifest.json`.
+
 ## 1. Repository changes
 
 The target repository was a new, empty Git repository with remote
@@ -127,6 +133,8 @@ deletes only `runs/temp/` and `runs/failed-temp/` blobs after 30 days. It does n
 delete successful run prefixes or `approved-releases`. Shared-key authorization
 and anonymous blobs are disabled; HTTPS and TLS 1.2 are required. The managed
 identity has Blob Data Contributor only on `datasets` and `runs` containers.
+The signed-in operator was additionally granted Blob Data Contributor on the
+`datasets` container to perform the explicitly requested staging operation.
 
 ## 10. Validation commands and results
 
@@ -172,17 +180,16 @@ No exact future bill is claimed.
 
 ## 13. Next steps for IMS staging
 
-1. Recheck the [NASA catalog](https://data.nasa.gov/dataset/ims-bearings), bundled
-   README, attribution, and current terms; obtain the dataset manually.
+The source archive and checksum manifest are now staged privately. Remaining steps:
+
+1. Review the staged archive's bundled README and attribution.
 2. Reconcile the authoritative 20 kHz rate and 20,480 samples/record before
    changing unresolved protocol fields.
-3. Run `infra/scripts/stage-dataset.ps1 -Dataset ims -SourcePath <secure-set2-path>
-   -StorageAccount stmciftwkuz2bqjva` while signed in with Entra ID.
-4. Review the generated SHA-256 manifest, its manifest hash, and private upload
-   under `datasets/ims/`; never add it or source files to Git.
-5. Resolve and review every `unresolved` field and implement the MCIFT adapter
+3. Review the generated SHA-256 manifest and its own manifest hash; never add it
+   or source files to Git.
+4. Resolve and review every `unresolved` field and implement the MCIFT adapter
    from an approved theory-to-code mapping.
-6. After West Europe capacity recovers, rerun what-if/apply with
+5. After West Europe capacity recovers, rerun what-if/apply with
    `deployContainerApps=true`; confirm the new job has zero executions.
 
 ## 14. Next steps for Exathlon staging
@@ -213,10 +220,12 @@ provenance, and checksums, and opens a draft pull request.
 
 ## 16. Scientific execution confirmation
 
-No IMS or Exathlon dataset was downloaded. No scientific benchmark, baseline
-tuning, report generation, Container Apps execution, or Azure ML job was run.
-No result or placeholder metric was invented or published. All tests used small
-synthetic arrays and are software tests, not scientific evidence.
+The official IMS archive was staged directly from NASA to private Azure storage;
+no complete local copy was retained. No Exathlon dataset was downloaded. No
+scientific benchmark, baseline tuning, report generation, Container Apps
+execution, or Azure ML job was run. No result or placeholder metric was invented
+or published. All tests used small synthetic arrays and are software tests, not
+scientific evidence.
 
 ## Delivery status
 

@@ -4,6 +4,7 @@ param(
   [Parameter(Mandatory)][ValidatePattern('^https://')][string]$SourceUrl,
   [Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$')][string]$BlobName,
   [string]$ResourceGroup = 'rg-mcift-benchmarks-weu',
+  [string]$Confirmation = '',
   [switch]$Overwrite
 )
 
@@ -33,7 +34,11 @@ if ($Dataset -eq 'ims') {
   Write-Host 'Exathlon data is CC BY-NC-SA 4.0; preserve attribution and non-commercial terms.'
 }
 
-$confirmation = Read-Host "Type STAGE_$($Dataset.ToUpperInvariant()) to stream the public source into private Azure storage"
+$confirmation = if ([string]::IsNullOrEmpty($Confirmation)) {
+  Read-Host "Type STAGE_$($Dataset.ToUpperInvariant()) to stream the public source into private Azure storage"
+} else {
+  $Confirmation
+}
 if ($confirmation -cne "STAGE_$($Dataset.ToUpperInvariant())") {
   throw 'Confirmation did not match. Nothing uploaded.'
 }
