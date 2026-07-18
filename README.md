@@ -5,7 +5,8 @@ Reproducible, fail-closed preparation for two proposed public benchmark studies:
 - NASA IMS Set 2 bearing early warning;
 - Exathlon Spark telemetry anomaly propagation.
 
-No scientific benchmark has been run or published. The repository contains
+Both scientific benchmarks have now been executed into private Azure run storage;
+no scientific result has been approved or published. The repository contains
 software tests on synthetic arrays only. MCIFT remains a speculative framework;
 this project does not claim validation or replace established methods.
 
@@ -55,4 +56,3 @@ flowchart LR
 
 AGPL-3.0-only, with a separate commercial-licensing notice. See `LICENSE` and
 `COMMERCIAL-LICENSE.md`.
-

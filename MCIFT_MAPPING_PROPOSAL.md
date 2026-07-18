@@ -1,6 +1,6 @@
 # MCIFT observable-mapping proposal
 
-Status: **engineering inference requiring scientific approval before execution**.
+Status: **approved by the repository operator on 2026-07-18 for the two frozen v1 runs**.
 
 Source inspected at `corpobear/Quantum-field-hypothesis` commit
 `e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687`.

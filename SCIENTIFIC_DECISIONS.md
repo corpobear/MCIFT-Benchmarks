@@ -1,7 +1,7 @@
-# Scientific decisions required before execution
+# Scientific decisions frozen for execution
 
-Engineering is fail-closed until these choices are reviewed and frozen. Provide
-values plus a source/rationale; do not answer by asking engineering to guess.
+The repository operator approved the mapping on 2026-07-18. The choices below
+were frozen in the versioned configurations before any benchmark outcome was viewed.
 
 ## Shared MCIFT mapping
 
@@ -33,5 +33,12 @@ values plus a source/rationale; do not answer by asking engineering to guess.
 
 ## Approval record
 
-Record reviewer, date, source commit, config hashes, and an explicit statement
-that all choices were frozen before viewing benchmark outcomes.
+- Reviewer: repository operator via the Codex thread.
+- Approval date: 2026-07-18.
+- Theory source: `e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687`.
+- IMS configuration SHA-256:
+  `efff5b906c793bcb5872f33632596f0a6ac21bd1be6419706109e8b0d9d780b8`.
+- Exathlon configuration SHA-256:
+  `d870e7e5346fbf521b919789865b97adc128459e762d3139fcab0a9b75abcadb`.
+- All choices were frozen before benchmark outcomes were viewed.
+- Exact implemented values are authoritative in the two versioned YAML files.

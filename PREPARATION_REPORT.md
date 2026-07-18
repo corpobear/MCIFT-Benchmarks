@@ -10,11 +10,11 @@ blob is `datasets/ims/source/IMS.zip`, its size is 1,061,902,801 bytes, and its
 SHA-256 is `6cb42c263b0281c725abf99f4b9fcf49915c949f31dbd2333877dc2e06ce9ec2`.
 The private manifest is `datasets/ims/manifests/IMS.zip.manifest.json`.
 
-Exathlon staging update, 2026-07-18: all 94 ZIP files under the official
-repository's `data/raw/` tree were streamed directly into private Blob Storage.
-Their aggregate size is 2,812,211,810 bytes. The aggregate manifest is
+Exathlon staging update, 2026-07-18: all 94 ZIP files and eight required split
+ZIP segments under the official repository's `data/raw/` tree were streamed
+directly into private Blob Storage. Their aggregate size is 3,231,642,210 bytes. The aggregate manifest is
 `datasets/exathlon/manifests/dataset-manifest.json`, with SHA-256
-`9fb7069ba4cf53ce730cebfae7acb50cfd6c0f727f0f48afb784a47347b46796`.
+`add90088311448a368b2674c260d65031bee4346e51fb9e130354e7e8cba8d63`.
 Its blob metadata matches the locally calculated manifest hash. The dataset
 container remains private and shared-key access remains disabled.
 
@@ -132,8 +132,8 @@ VMs: 0
 AKS clusters: 0
 ```
 
-Because the Container Apps job could not be created, it has no executions; this
-task initiated zero executions. The AML cluster was deliberately omitted after
+Because the Container Apps job could not be created, it has no executions; the
+preparation phase initiated zero executions. The AML cluster was deliberately omitted after
 the quota/availability check, so active AML nodes are zero. No scientific command
 was submitted.
 
@@ -213,7 +213,8 @@ The source archive and checksum manifest are now staged privately. Remaining ste
 
 ## 14. Next steps for Exathlon staging
 
-All 94 official raw ZIPs and the aggregate checksum manifest are staged privately.
+All 94 official raw ZIPs, eight required split segments, and the aggregate checksum
+manifest are staged privately.
 No local dataset download is now required. Remaining steps:
 
 1. Review the manifest and preserve CC BY-NC-SA 4.0 dataset obligations; the
@@ -238,19 +239,34 @@ Neither workflow has push, pull-request, schedule, or event triggers. Publicatio
 is a separate manual workflow that reads only `approved-releases`, verifies schema,
 provenance, and checksums, and opens a draft pull request.
 
-## 16. Scientific execution confirmation
+## 16. Scientific execution follow-up
 
-The official IMS archive and all official Exathlon raw ZIPs were staged directly
-to private Azure storage; no complete local copy was retained. No
-scientific benchmark, baseline tuning, report generation, Container Apps
-execution, or Azure ML job was run. No result or placeholder metric was invented
-or published. All tests used small synthetic arrays and are software tests, not
-scientific evidence.
+After explicit operator approval on 2026-07-18, both frozen protocols were run
+from committed code on the authenticated operator workstation because GHCR,
+Container Apps, and AML compute blockers remained. Results were written only to:
+
+- `runs/ims/ims-20260718-approved-v1/`;
+- `runs/exathlon/exathlon-20260718-approved-v1/`.
+
+Each private run contains `summary.json`, `scores.csv`, and `manifest.json`.
+Both schemas and every recorded artifact checksum passed verification. Manifest
+status is `completed`, not `approved`; no result was copied to the public report,
+Git, `approved-releases`, or GitHub Pages. The temporary operator write role on
+the `runs` container was removed after upload. No complete local dataset copy was
+retained. Synthetic tests remain software tests, not scientific evidence.
+
+IMS provenance pins source commit
+`731c249288d67dac4e3a10792980ec99be1de34d` and local Linux image digest
+`sha256:fdcc4ed70c3878bdcca7c28ff291f41c236c4a9ab0f45b1aa093ea372ad18c62`.
+Exathlon provenance pins source commit
+`cc2248b44f519e52254658731663a469ff3b9849` and local Linux image digest
+`sha256:000e299dd921702b3709e5e4a1a0838c77fc1ada8ced6310a982942db88c33e6`.
+These are local OCI image digests, not published GHCR digests.
 
 ## Delivery status
 
 Branch: `infra/public-benchmarks`. Draft PR:
 https://github.com/corpobear/MCIFT-Benchmarks/pull/1. Azure preparation is complete
 except for the explicitly documented GHCR package permission, Container Apps
-capacity, AML SKU restriction, and unresolved scientific protocol. Both
-scientific workloads remain unexecuted.
+capacity, and AML SKU restriction. Both scientific workloads completed privately;
+their results remain unapproved and unpublished pending review.
