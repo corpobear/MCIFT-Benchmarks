@@ -10,6 +10,14 @@ blob is `datasets/ims/source/IMS.zip`, its size is 1,061,902,801 bytes, and its
 SHA-256 is `6cb42c263b0281c725abf99f4b9fcf49915c949f31dbd2333877dc2e06ce9ec2`.
 The private manifest is `datasets/ims/manifests/IMS.zip.manifest.json`.
 
+Exathlon staging update, 2026-07-18: all 94 ZIP files under the official
+repository's `data/raw/` tree were streamed directly into private Blob Storage.
+Their aggregate size is 2,812,211,810 bytes. The aggregate manifest is
+`datasets/exathlon/manifests/dataset-manifest.json`, with SHA-256
+`9fb7069ba4cf53ce730cebfae7acb50cfd6c0f727f0f48afb784a47347b46796`.
+Its blob metadata matches the locally calculated manifest hash. The dataset
+container remains private and shared-key access remains disabled.
+
 ## 1. Repository changes
 
 The target repository was a new, empty Git repository with remote
@@ -23,10 +31,15 @@ The target repository was a new, empty Git repository with remote
 - `simulations/mcift_v0_97_threefold_reducer.py` contains related `wmean`,
   `wstd`, and `rho` helpers;
 - it has no packaged Python configuration and no reviewed feature mapping from
-  MCIFT quantities to bearing vibration or Spark telemetry.
+  MCIFT quantities to bearing vibration or Spark telemetry;
+- commit `e1d93e1d8b21a4420b2f3a566d5a66ac2a7ba687` defines the pairwise
+  information-exchange toy law used by the engineering proposal.
 
-No theory or scientific claim was copied or rewritten. The new benchmark adapter
-therefore raises `NotImplementedError` with a precise theory-to-observable TODO.
+No theory or scientific claim was rewritten. `MCIFT_MAPPING_PROPOSAL.md` clearly
+separates the source equation from inferred sensor/telemetry observables. The
+proposal adapter implements the pairwise equation on synthetic arrays, while the
+default contract still fails closed and both benchmark configurations remain
+blocked pending scientific approval and frozen parameters.
 Conventional feature/evaluation scaffolding is present but has not been tuned or
 evaluated. AGPL/commercial notices, a pinned Python 3.12 package, hash-locked
 dependencies, a non-root CPU image, configurations, schemas, synthetic tests,
@@ -61,7 +74,8 @@ Apps job was left deployed.
   idle scale-down. `Standard_D8s_v5` is documented only as an optional similar-size
   fallback; it was not substituted.
 - GHCR image: build workflow and Dockerfile exist, but no image was published.
-- GHCR image publication remains pending; repository automation is configured.
+- GHCR image publication remains pending because the available Git credential
+  lacks package-write scope; repository automation is configured.
 
 ## 4. Active subscription and region
 
@@ -82,10 +96,12 @@ registration during the first check and subsequently supported deployment.
 
 Prepared publication name: `ghcr.io/corpobear/mcift-benchmarks`.
 Current infrastructure placeholder: `sha-unpublished`. No published SHA tag or
-benchmark image digest exists because the manual publication workflow was not run.
-The local Docker daemon was unavailable, but GitHub CI successfully built the
-Linux image without running a benchmark. The pinned Python base digest is not a
-published benchmark-image digest.
+benchmark image digest exists. Docker Desktop locally built the Linux AMD64 image
+for source commit `bcae09711fe4d59b6ff548186ce78ae56bf28354`; its local image ID is
+`sha256:bccb16d6ee8b2b52422c60cbe4f86a9968ba03ef229cda920e004f504e5eae45`,
+and container CLI help passed. GHCR rejected publication because the available
+token did not have the expected package scope. This local ID is not presented as
+a published registry digest.
 
 ## 7. OIDC status
 
@@ -144,7 +160,7 @@ Passed:
 ruff format --check benchmarks
 ruff check benchmarks
 mypy --config-file benchmarks/pyproject.toml benchmarks/src
-pytest benchmarks/tests/synthetic                    # 4 software tests
+pytest benchmarks/tests/synthetic                    # 7 software tests
 JSON Schema meta-schema checks                       # 2 schemas
 YAML parsing                                         # 6 workflows
 az bicep build --file infra/bicep/main.bicep
@@ -153,21 +169,24 @@ az deployment sub what-if ...                        # 18 create, 2 provider-opa
 az deployment sub create ...                         # blocker-aware deployment succeeded
 python -m mcift_benchmarks --help
 python -m mcift_benchmarks validate-config ...       # both configs
+python -m mcift_benchmarks preflight-run ...          # fail-closed, unresolved fields listed
 secret-assignment pattern scan                       # none found
 ```
 
-The local image build could not run because Docker Desktop's Linux engine pipe was
-absent. GitHub push and pull-request CI both passed, including a Linux container
-build without running either benchmark. Azure deployment validation and what-if
-succeeded before apply. No validation processed real data.
+The local Linux AMD64 image build and container CLI help passed. GHCR publication
+failed only at package authorization. GitHub push and pull-request CI previously
+passed, including a Linux container build without running either benchmark.
+Azure deployment validation and what-if succeeded before apply. No validation
+processed dataset contents.
 
 ## 11. Quota and permission blockers
 
 - West Europe Container Apps managed-environment capacity blocked creation twice.
 - `Standard_D8as_v5` was unavailable for this subscription; no larger or more
   expensive size was selected.
-- The local Docker Linux engine was unavailable, so local image construction
-  could not be verified. The manual GHCR workflow is ready but was not invoked.
+- GHCR push needs a token with `write:packages` or the protected manual build
+  workflow must be dispatched after it exists on the default branch. Package
+  visibility must then be changed to public before Azure uses it anonymously.
 - Azure permissions were sufficient for resources, Entra federation, and scoped RBAC.
 
 ## 12. Idle monthly cost categories
@@ -187,21 +206,22 @@ The source archive and checksum manifest are now staged privately. Remaining ste
    changing unresolved protocol fields.
 3. Review the generated SHA-256 manifest and its own manifest hash; never add it
    or source files to Git.
-4. Resolve and review every `unresolved` field and implement the MCIFT adapter
-   from an approved theory-to-code mapping.
+4. Resolve and review every `unresolved` field, approve or replace the proposed
+   MCIFT observable mapping, and wire the approved adapter into the run pipeline.
 5. After West Europe capacity recovers, rerun what-if/apply with
    `deployContainerApps=true`; confirm the new job has zero executions.
 
 ## 14. Next steps for Exathlon staging
 
-1. Obtain data from the [official Exathlon repository](https://github.com/exathlonbenchmark/exathlon).
-   Preserve CC BY-NC-SA 4.0 dataset obligations; its code license is separately Apache-2.0.
-2. Run `infra/scripts/stage-dataset.ps1 -Dataset exathlon -SourcePath <secure-path>
-   -StorageAccount stmciftwkuz2bqjva` using Entra ID.
-3. Review checksums and the private `datasets/exathlon/` layout.
-4. Resolve the 19-feature, resampling, missing-data, split, interval, event, and
+All 94 official raw ZIPs and the aggregate checksum manifest are staged privately.
+No local dataset download is now required. Remaining steps:
+
+1. Review the manifest and preserve CC BY-NC-SA 4.0 dataset obligations; the
+   repository's code license is separately Apache-2.0.
+2. Resolve the exact 19-feature list, resampling, missing-data, split, interval,
+   event, and
    MCIFT relationship/topology protocol fields before any run.
-5. Obtain suitable West Europe low-priority DASv5 quota/availability, rerun
+3. Obtain suitable West Europe low-priority DASv5 quota/availability, rerun
    what-if with `deployExathlonCompute=true`, and verify min nodes/current nodes zero.
 
 ## 15. Later start mechanisms
@@ -220,8 +240,8 @@ provenance, and checksums, and opens a draft pull request.
 
 ## 16. Scientific execution confirmation
 
-The official IMS archive was staged directly from NASA to private Azure storage;
-no complete local copy was retained. No Exathlon dataset was downloaded. No
+The official IMS archive and all official Exathlon raw ZIPs were staged directly
+to private Azure storage; no complete local copy was retained. No
 scientific benchmark, baseline tuning, report generation, Container Apps
 execution, or Azure ML job was run. No result or placeholder metric was invented
 or published. All tests used small synthetic arrays and are software tests, not
@@ -231,5 +251,6 @@ scientific evidence.
 
 Branch: `infra/public-benchmarks`. Draft PR:
 https://github.com/corpobear/MCIFT-Benchmarks/pull/1. Azure preparation is complete
-except for the explicitly documented Container Apps capacity and AML SKU
-restriction. Both scientific workloads remain unexecuted.
+except for the explicitly documented GHCR package permission, Container Apps
+capacity, AML SKU restriction, and unresolved scientific protocol. Both
+scientific workloads remain unexecuted.
