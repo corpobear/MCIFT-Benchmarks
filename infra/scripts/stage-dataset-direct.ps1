@@ -5,6 +5,7 @@ param(
   [Parameter(Mandatory)][ValidatePattern('^[A-Za-z0-9][A-Za-z0-9._-]{0,199}$')][string]$BlobName,
   [string]$ResourceGroup = 'rg-mcift-benchmarks-weu',
   [string]$Confirmation = '',
+  [string]$PythonExecutable = '',
   [switch]$Overwrite
 )
 
@@ -44,17 +45,21 @@ if ($confirmation -cne "STAGE_$($Dataset.ToUpperInvariant())") {
 }
 
 $taskRoot = Join-Path ([IO.Path]::GetTempPath()) "mcift-direct-stage-$([Guid]::NewGuid().ToString('N'))"
-$venvPath = Join-Path $taskRoot 'venv'
 $pythonScript = Join-Path $taskRoot 'stream_to_blob.py'
 New-Item -ItemType Directory -Path $taskRoot | Out-Null
 
 try {
-  python -m venv $venvPath
-  if ($LASTEXITCODE -ne 0) { throw 'Python virtual environment creation failed.' }
-  $python = Join-Path $venvPath 'Scripts/python.exe'
-  & $python -m pip install --quiet --disable-pip-version-check `
-    azure-identity==1.19.0 azure-storage-blob==12.24.0
-  if ($LASTEXITCODE -ne 0) { throw 'Azure Python package installation failed.' }
+  if ([string]::IsNullOrEmpty($PythonExecutable)) {
+    $venvPath = Join-Path $taskRoot 'venv'
+    python -m venv $venvPath
+    if ($LASTEXITCODE -ne 0) { throw 'Python virtual environment creation failed.' }
+    $python = Join-Path $venvPath 'Scripts/python.exe'
+    & $python -m pip install --quiet --disable-pip-version-check `
+      azure-identity==1.19.0 azure-storage-blob==12.24.0
+    if ($LASTEXITCODE -ne 0) { throw 'Azure Python package installation failed.' }
+  } else {
+    $python = (Resolve-Path -LiteralPath $PythonExecutable).Path
+  }
 
   @'
 from __future__ import annotations
@@ -63,7 +68,6 @@ import argparse
 import base64
 import hashlib
 import json
-import sys
 import urllib.request
 from datetime import UTC, datetime
 
@@ -95,7 +99,21 @@ def main() -> int:
     destination = f"{args.dataset}/source/{args.blob_name}"
     blob = service.get_blob_client(container="datasets", blob=destination)
     if blob.exists() and not args.overwrite:
-        raise RuntimeError("destination exists; rerun with -Overwrite only after review")
+        properties = blob.get_blob_properties()
+        metadata = properties.metadata or {}
+        if metadata.get("dataset") != args.dataset or not metadata.get("sha256"):
+            raise RuntimeError(
+                "destination exists without trusted dataset/SHA-256 metadata; "
+                "rerun with -Overwrite only after review"
+            )
+        print(json.dumps({
+            "blob": destination,
+            "bytes": properties.size,
+            "sha256": metadata["sha256"],
+            "status": "already-staged",
+        }, indent=2))
+        credential.close()
+        return 0
 
     digest = hashlib.sha256()
     blocks: list[BlobBlock] = []
@@ -119,7 +137,7 @@ def main() -> int:
             blob.stage_block(block_id=identifier, data=chunk, length=len(chunk))
             blocks.append(BlobBlock(block_id=identifier))
             index += 1
-            print(f"streamed {byte_count} bytes", file=sys.stderr)
+            print(f"streamed {byte_count} bytes")
 
     if not blocks:
         raise RuntimeError("source returned no data")
