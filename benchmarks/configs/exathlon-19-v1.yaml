@@ -16,8 +16,16 @@ baselines:
   - pca_reconstruction_error
   - isolation_forest
 mcift:
-  topology_adapter: unresolved
-  relationship_mapping: unresolved
+  topology_adapter: inferred_exchange_complete_graph_v1
+  source_repository_commit: e1d93e1
+  observable_map: scaled_log_rms_spectral_centroid_shared_bin_phase
+  channel_scale_rule: unresolved
+  relationship_mapping: pairwise_exchange_complete_graph
+  sigma_information_rule: unresolved
+  sigma_angular_frequency_rule: unresolved
+  coupling_g: 1.0
+  densification_eta: 1.0
+  approval: unresolved
   status: blocks-run
 event_evaluation:
   aggregation: unresolved

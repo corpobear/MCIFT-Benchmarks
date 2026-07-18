@@ -3,6 +3,8 @@ from __future__ import annotations
 import hashlib
 import json
 import platform
+import subprocess
+from datetime import UTC, datetime
 from importlib.metadata import distributions
 from pathlib import Path
 from typing import Any
@@ -67,3 +69,21 @@ def load_manifest(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError("manifest must be a JSON object")
     return value
+
+
+def git_facts(repository: Path) -> dict[str, Any]:
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=repository, check=True, capture_output=True, text=True
+    ).stdout.strip()
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=repository,
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    return {"git_commit": commit, "dirty_worktree": bool(status.strip())}
+
+
+def utc_now() -> str:
+    return datetime.now(UTC).isoformat()

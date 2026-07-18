@@ -22,7 +22,15 @@ conventional_features:
   - spectral_entropy
   - frequency_band_energy
 mcift:
-  adapter: unresolved
+  adapter: inferred_exchange_v1
+  source_repository_commit: e1d93e1
+  observable_map: scaled_log_rms_spectral_centroid_shared_bin_phase
+  channel_scale_rule: unresolved
+  sigma_information_rule: unresolved
+  sigma_angular_frequency_rule: unresolved
+  coupling_g: 1.0
+  densification_eta: 1.0
+  approval: unresolved
   status: blocks-run
 threshold_policy:
   method: unresolved
