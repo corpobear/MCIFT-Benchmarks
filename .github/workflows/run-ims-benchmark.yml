@@ -1,0 +1,41 @@
+name: Run IMS public benchmark
+on:
+  workflow_dispatch:
+    inputs:
+      confirmation: {description: 'Type RUN_IMS_PUBLIC_BENCHMARK', required: true}
+      image_digest: {description: 'Immutable ghcr.io image@sha256:...', required: true}
+      dataset_manifest_blob: {description: 'Blob path under datasets/ims/', required: true}
+      output_run_id: {description: 'New run identifier', required: true}
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  submit:
+    if: inputs.confirmation == 'RUN_IMS_PUBLIC_BENCHMARK'
+    environment: azure-benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Display immutable selections
+        env:
+          IMAGE: ${{ inputs.image_digest }}
+          MANIFEST: ${{ inputs.dataset_manifest_blob }}
+          RUN_ID: ${{ inputs.output_run_id }}
+        run: |
+          test "$MANIFEST" != "${MANIFEST#datasets/ims/}"
+          test "$IMAGE" != "${IMAGE#*@sha256:}"
+          sha256sum benchmarks/configs/ims-set2-v1.yaml
+          printf 'image=%s\nmanifest=%s\nrun=%s\n' "$IMAGE" "$MANIFEST" "$RUN_ID"
+      - name: Start manual job
+        run: >-
+          az containerapp job start --resource-group '${{ vars.AZURE_RESOURCE_GROUP }}'
+          --name caj-mcift-ims --image '${{ inputs.image_digest }}'
+          --command python -m mcift_benchmarks
+          --args run --config /app/configs/ims-set2-v1.yaml
+          --input "https://${{ vars.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/${{ inputs.dataset_manifest_blob }}"
+          --output "https://${{ vars.AZURE_STORAGE_ACCOUNT }}.blob.core.windows.net/runs/ims/${{ inputs.output_run_id }}/"

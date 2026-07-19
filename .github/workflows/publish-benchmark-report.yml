@@ -1,0 +1,46 @@
+name: Prepare benchmark report publication PR
+on:
+  workflow_dispatch:
+    inputs:
+      benchmark: {description: Benchmark, type: choice, options: [ims, exathlon], required: true}
+      approved_release: {description: 'Path under approved-releases/<benchmark>/', required: true}
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+jobs:
+  prepare-pr:
+    environment: azure-benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install -e ./benchmarks
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - name: Download approved artifacts only
+        env:
+          RELEASE: ${{ inputs.approved_release }}
+          BENCHMARK: ${{ inputs.benchmark }}
+        run: |
+          test "$RELEASE" != "${RELEASE#$BENCHMARK/}"
+          mkdir -p .approved
+          az storage blob download-batch --auth-mode login --account-name '${{ vars.AZURE_STORAGE_ACCOUNT }}' --source approved-releases --pattern '${{ inputs.approved_release }}/*' --destination .approved
+      - name: Validate provenance, schema, and checksums
+        run: python -m mcift_benchmarks.reporting.validate_release --release ".approved/${{ inputs.approved_release }}" --schema benchmarks/schemas/benchmark-manifest.schema.json
+      - run: python -m mcift_benchmarks build-report --run ".approved/${{ inputs.approved_release }}" --output "docs/benchmarks/${{ inputs.benchmark }}"
+      - name: Open review pull request
+        env: {GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}'}
+        run: |
+          branch="publication/${{ inputs.benchmark }}-${{ github.run_id }}"
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git switch -c "$branch"
+          git add "docs/benchmarks/${{ inputs.benchmark }}"
+          git commit -m "docs: prepare reviewed ${{ inputs.benchmark }} benchmark report"
+          git push origin "$branch"
+          gh pr create --draft --title "Publish reviewed ${{ inputs.benchmark }} benchmark report" --body "Generated only from approved-release artifacts; requires human review."

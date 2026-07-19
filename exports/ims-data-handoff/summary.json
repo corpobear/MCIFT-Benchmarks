@@ -1,0 +1,21 @@
+{
+  "benchmark_name": "ims-early-warning",
+  "benchmark_version": "ims-set2-v1",
+  "provenance_manifest": "manifest.json",
+  "results": {
+    "calibration_recordings": 98,
+    "conventional_false_alarms_before_calibration_end": 3,
+    "mcift_false_alarms_before_calibration_end": 2,
+    "mcift_first_stable_warning": "2004.02.16.03.12.39",
+    "mcift_lead_recordings_before_final_recording": 451,
+    "recordings": 984,
+    "reference_recordings": 98,
+    "sigma_angular_frequency": 3635.9420568674946,
+    "sigma_information": 0.010496195706359327,
+    "thresholds": {
+      "conventional": 5.841765941775609,
+      "mcift": 0.3310462580442802
+    }
+  },
+  "run_id": "ims-20260718-approved-v1"
+}

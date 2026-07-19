@@ -9,3 +9,10 @@ dataset material into a public report.
 ```powershell
 ./infra/scripts/stage-dataset.ps1 -Dataset exathlon -SourcePath C:\secure\exathlon -StorageAccount <name>
 ```
+
+Or stream every official `data/raw/**/*.zip` object directly into private Blob
+Storage and create an aggregate manifest:
+
+```powershell
+./infra/scripts/stage-exathlon-direct.ps1
+```

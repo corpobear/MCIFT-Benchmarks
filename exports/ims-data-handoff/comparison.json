@@ -1,0 +1,35 @@
+{
+  "schema_version": "2.0",
+  "source_file": "scores.csv",
+  "stable_warning_rule": {
+    "consecutive_positive_recordings": 3,
+    "reported_timestamp_semantics": "first positive in the first qualifying run",
+    "recording_interval_minutes_observed": 10,
+    "three_observation_timestamp_span_minutes": 20
+  },
+  "mcift": {
+    "stable_run_start_index": 532,
+    "stable_run_start_timestamp": "2004-02-16T03:12:39",
+    "lead_recordings_before_final": 451,
+    "lead_minutes_before_final": 4510,
+    "positive_recordings": 459,
+    "separate_positive_runs": 27,
+    "threshold_crossings_before_calibration_end": 2
+  },
+  "conventional": {
+    "stable_run_start_index": 537,
+    "stable_run_start_timestamp": "2004-02-16T04:02:39",
+    "lead_recordings_before_final": 446,
+    "lead_minutes_before_final": 4460,
+    "positive_recordings": 454,
+    "separate_positive_runs": 10,
+    "threshold_crossings_before_calibration_end": 3
+  },
+  "comparison": {
+    "mcift_warning_lead_advantage_recordings": 5,
+    "mcift_warning_lead_advantage_minutes": 50,
+    "mcift_has_fewer_early_calibration_crossings": true,
+    "conventional_has_fewer_fragmented_positive_runs": true,
+    "superiority_verdict": "not established"
+  }
+}

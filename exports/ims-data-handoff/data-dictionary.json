@@ -1,0 +1,38 @@
+{
+  "schema_version": "2.0",
+  "exported_at_utc": "2026-07-19T06:15:17.883003+00:00",
+  "files": {
+    "summary.json": "Byte-identical preserved benchmark result summary.",
+    "scores.csv": "Byte-identical per-recording detector scores and strict-threshold flags.",
+    "comparison.json": "Derived stable-warning and fragmentation comparison; does not establish superiority.",
+    "methodology.json": "Exact implementation-traced methodology, equations, evidence table, limitations, and data-quality policy.",
+    "methodology-table.csv": "Flat Item/Value/Class/Evidence source rendering of methodology.json.methodology_table.",
+    "provenance.redacted.json": "Allowlisted reproducibility facts with private locations and infrastructure fields removed.",
+    "data-dictionary.json": "This file."
+  },
+  "scores.csv": {
+    "recording_index": "Zero-based index after lexicographic path sorting.",
+    "timestamp": "Unparsed source filename; observed format YYYY.MM.DD.HH.MM.SS.",
+    "mcift_score": "Upper-triangle RMS distance from frozen healthy-reference exchange matrix; exact equation in methodology.json.",
+    "conventional_score": "Maximum absolute robust standardized value across 24 conventional features; exact pipeline in methodology.json.",
+    "mcift_positive": "True only when mcift_score is strictly greater than 0.3310462580442802.",
+    "conventional_positive": "True only when conventional_score is strictly greater than 5.841765941775609."
+  },
+  "partitions": {
+    "reference_indices": "0-97 inclusive",
+    "calibration_indices": "98-195 inclusive",
+    "evaluation_indices": "196-983 inclusive"
+  },
+  "status_fields": {
+    "execution_status": "Whether the benchmark process completed.",
+    "scientific_review_status": "Authoritative publication-review state; unapproved for this export.",
+    "exported_at_utc": "UTC time this public export was generated, separate from run start/completion.",
+    "methodology_source_commit": "Exact Git commit whose configuration and executed implementation were traced."
+  },
+  "interpretation_limits": [
+    "Final recording is an experiment endpoint, not a labelled degradation-onset timestamp.",
+    "Three consecutive observations span 20 minutes between first and third timestamps.",
+    "Warning lead is measured to the final recording only.",
+    "These results do not establish MCIFT superiority."
+  ]
+}
