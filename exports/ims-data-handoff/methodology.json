@@ -1,0 +1,443 @@
+{
+  "schema_version": "2.0",
+  "benchmark_name": "ims-early-warning",
+  "benchmark_version": "ims-set2-v1",
+  "run_id": "ims-20260718-approved-v1",
+  "methodology_source_commit": "731c249288d67dac4e3a10792980ec99be1de34d",
+  "feature_extraction_version": "ims-set2-v1@731c249288d67dac4e3a10792980ec99be1de34d",
+  "exported_at_utc": "2026-07-19T06:15:17.883003+00:00",
+  "scientific_review_status": "unapproved",
+  "run_status": {
+    "execution_status": "completed",
+    "run_id_approved_token": "internal artifact label only",
+    "config_approval": "approved for execution, not scientific publication",
+    "authoritative_publication_status": "scientific_review_status=unapproved",
+    "explanation": "The run ID was derived from the output location and was not interpreted by the runner. The source manifest says only that execution completed. The preserved run does not have the manifest status 'approved' required by publication validation."
+  },
+  "methodology_table": [
+    {
+      "item": "Selected IMS test set",
+      "value": "Set 2 (2nd_test.rar)",
+      "class": "executed configuration and code",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L8",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L71-L88"
+      ]
+    },
+    {
+      "item": "Selected bearing",
+      "value": "No single bearing selected; all four configured bearings enter both detectors",
+      "class": "executed configuration and code",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L9",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L102-L114"
+      ]
+    },
+    {
+      "item": "Selected source columns",
+      "value": "All four columns, NumPy indices 0, 1, 2, 3; configured order bearing_1 through bearing_4",
+      "class": "executed code plus configuration ordering",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L9",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L98-L102",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L102-L114"
+      ]
+    },
+    {
+      "item": "Accelerometer direction",
+      "value": "Not verifiable from the preserved run",
+      "class": "evidence gap",
+      "evidence_source": "No direction field exists in the executed config, loader, summary, or manifest."
+    },
+    {
+      "item": "Channel-selection rationale",
+      "value": "Not documented; the code consumes every column rather than selecting one",
+      "class": "evidence gap",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L9",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L102-L114"
+      ]
+    },
+    {
+      "item": "End-of-test bearing fault",
+      "value": "Not verifiable from the preserved run",
+      "class": "evidence gap",
+      "evidence_source": "The executed artifacts identify only the final experiment recording, not a bearing-specific fault label."
+    },
+    {
+      "item": "Raw recording structure",
+      "value": "20,480 rows x 4 columns, 20,000 Hz, 1.024 s waveform duration, tab-delimited numeric text",
+      "class": "executed configuration and fail-fast loader",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L9-L16",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L98-L102"
+      ]
+    },
+    {
+      "item": "Recording timestamp",
+      "value": "Unparsed source filename; observed format YYYY.MM.DD.HH.MM.SS",
+      "class": "executed code and preserved scores",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L105-L107",
+        "scores.csv timestamp column"
+      ]
+    },
+    {
+      "item": "Recording interval",
+      "value": "Not configured; post-hoc artifact audit found all 983 intervals equal to 10 minutes",
+      "class": "observed preserved artifact",
+      "evidence_source": "scores.csv timestamp audit"
+    },
+    {
+      "item": "Conventional feature vector",
+      "value": "24 values: six features in channel-major order for each of four centered channels",
+      "class": "executed code",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L100-L114",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L8-L37"
+      ]
+    },
+    {
+      "item": "Conventional score",
+      "value": "maximum absolute per-feature robust standardized deviation from reference medians",
+      "class": "executed code",
+      "evidence_source": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L135-L146"
+    },
+    {
+      "item": "MCIFT exchange matrix",
+      "value": "4 x 4 symmetric matrix, zero diagonal, six unordered pair values",
+      "class": "executed code",
+      "evidence_source": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/mcift_adapter.py#L68-L109"
+    },
+    {
+      "item": "MCIFT distance",
+      "value": "root mean square difference over the six upper-triangle exchange entries",
+      "class": "executed code; overrides imprecise config label",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/configs/ims-set2-v1.yaml#L33",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L86-L91"
+      ]
+    },
+    {
+      "item": "Reference partition",
+      "value": "recording indices 0-97 inclusive (98 recordings)",
+      "class": "executed code and summary",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L121-L139",
+        "summary.json results.reference_recordings"
+      ]
+    },
+    {
+      "item": "Calibration partition",
+      "value": "recording indices 98-195 inclusive (98 recordings); thresholds only",
+      "class": "executed code and summary",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L121-L160",
+        "summary.json results.calibration_recordings"
+      ]
+    },
+    {
+      "item": "Threshold quantile",
+      "value": "NumPy 2.2.1 quantile q=0.995 with default linear method; strict score > threshold",
+      "class": "executed code and dependency manifest",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L94-L97",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L156-L162",
+        "provenance.redacted.json dependencies"
+      ]
+    },
+    {
+      "item": "Stable warning",
+      "value": "first positive of first run of 3 consecutive strict exceedances; any negative resets counter",
+      "class": "executed code",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/evaluation/early_warning.py#L7-L15",
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L163-L167"
+      ]
+    },
+    {
+      "item": "Run/scientific status",
+      "value": "execution completed; scientific publication review unapproved",
+      "class": "preserved manifest plus publication policy",
+      "evidence_source": [
+        "source manifest status",
+        "provenance.redacted.json scientific_review_status"
+      ]
+    },
+    {
+      "item": "Raw data-quality counts",
+      "value": {
+        "expected_recordings": 984,
+        "loaded_recordings": 984,
+        "missing_recordings": 0,
+        "rejected_recordings": 0,
+        "malformed_recordings_detected_by_loader": 0,
+        "imputed_recordings": 0,
+        "raw_waveform_non_finite_values": "Not verifiable from the preserved run",
+        "derived_score_non_finite_values": 0,
+        "duplicate_timestamps_in_scores": 0,
+        "chronological_regressions_in_scores": 0,
+        "reordered_timestamps_by_executed_code": 0,
+        "observed_inter_recording_intervals": {
+          "count": 983,
+          "minimum_minutes": 10.0,
+          "maximum_minutes": 10.0,
+          "ten_minute_count": 983,
+          "other_count": 0
+        },
+        "evidence_limit": "The loader was fail-fast and produced 984 score rows, so no file was skipped, rejected, or imputed. It did not instrument raw non-finite-value counts."
+      },
+      "class": "fail-fast inference plus post-hoc preserved-artifact audit",
+      "evidence_source": [
+        "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L91-L107",
+        "scores.csv audit"
+      ]
+    }
+  ],
+  "selection": {
+    "recording_set": 2,
+    "bearings": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "source_column_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "indexing": "zero-based in NumPy/Python; bearing labels in config are one-based",
+    "accelerometer_direction": "Not verifiable from the preserved run",
+    "selection_rationale": "Not documented; all four columns are consumed",
+    "end_of_test_fault": "Not verifiable from the preserved run"
+  },
+  "raw_recording_structure": {
+    "expected_samples": 20480,
+    "expected_columns": 4,
+    "sampling_frequency_hz": 20000,
+    "recording_duration_seconds": 1.024,
+    "expected_interval": "Not specified by executed configuration or loader",
+    "observed_interval_minutes": 10,
+    "observed_interval_count": 983,
+    "format": "tab-delimited numeric text loaded as float64 by numpy.loadtxt",
+    "timestamp_source": "recording filename",
+    "timestamp_parsing_by_executed_code": "none",
+    "observed_timestamp_format": "YYYY.MM.DD.HH.MM.SS",
+    "loaded_all_984_files": true,
+    "expected_vs_observed_deviation": "none visible to fail-fast file-count/shape checks"
+  },
+  "conventional_feature_pipeline": {
+    "input_channels": 4,
+    "preprocessing": "x_c[n] = x[n] - mean(x) independently for every channel and recording",
+    "windowing": "none",
+    "filtering": "none",
+    "detrending": "per-recording arithmetic-mean removal only",
+    "feature_order": "channel-major; listed six-feature sequence repeated for columns 0, 1, 2, 3",
+    "feature_count": 24,
+    "features": [
+      {
+        "name": "rms",
+        "equation": "sqrt((1/N) * sum_n x_c[n]^2)",
+        "units": "source amplitude units; physical unit not recorded",
+        "category": "time-domain",
+        "constants_and_edge_cases": "none",
+        "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L8-L9"
+      },
+      {
+        "name": "peak_to_peak",
+        "equation": "max_n(x_c[n]) - min_n(x_c[n])",
+        "units": "source amplitude units; physical unit not recorded",
+        "category": "time-domain",
+        "constants_and_edge_cases": "none",
+        "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L12-L13"
+      },
+      {
+        "name": "kurtosis",
+        "algorithm": "scipy.stats.kurtosis(x_c, fisher=False, bias=False), SciPy 1.15.0",
+        "units": "dimensionless Pearson kurtosis",
+        "category": "time-domain",
+        "constants_and_edge_cases": "unbiased finite-sample correction delegated to pinned SciPy; constant input returns NaN",
+        "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L21-L22"
+      },
+      {
+        "name": "crest_factor",
+        "equation": "max_n(abs(x_c[n])) / rms(x_c)",
+        "units": "dimensionless",
+        "category": "time-domain",
+        "constants_and_edge_cases": "returns 0.0 when RMS is exactly zero",
+        "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L16-L18"
+      },
+      {
+        "name": "spectral_entropy",
+        "equation": "P_k=abs(rfft(x_c)_k)^2; p_k=P_k/sum(P); H=-sum_{p_k>0} p_k*log2(p_k)",
+        "units": "bits (dimensionless)",
+        "category": "frequency-domain",
+        "constants_and_edge_cases": "no window or FFT normalization; zero total power returns 0.0; zero-probability bins omitted",
+        "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L25-L32"
+      },
+      {
+        "name": "frequency_band_energy",
+        "equation": "sum_{k=1}^{5119} abs(rfft(x_c)_k)^2",
+        "units": "squared FFT-amplitude units; FFT is unnormalized",
+        "category": "frequency-domain",
+        "constants_and_edge_cases": "Python slice [1:5120], approximately 0.9765625 through 4999.0234375 Hz; no window, filtering, or normalization",
+        "implementation": [
+          "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/conventional.py#L35-L37",
+          "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L111"
+        ]
+      }
+    ],
+    "final_score_equation": "score=max_{j=1..24} abs((f_j-median_ref_j)/scale_ref_j)",
+    "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L100-L146"
+  },
+  "mcift_exchange_pipeline": {
+    "input": "all four raw waveform columns",
+    "reference_channel_scale": "s_c=median over recordings 0..97 of RMS(x_c-mean(x_c)); use 1.0 when s_c<=1e-12",
+    "standardized_waveform": "z[n,c]=(x[n,c]-mean_n(x[:,c]))/s_c",
+    "information": "I_c=ln(sqrt(mean_n(z[n,c]^2))+eps), eps=2.220446049250313e-16",
+    "spectrum": "X[k,c]=rfft(z[:,c]); P[k,c]=abs(X[k,c])^2; P[0,c]=0",
+    "angular_frequency": "omega_c=sum_k(2*pi*f_k*P[k,c])/sum_k(P[k,c]); 0 when total power is 0",
+    "phase": "k*=argmax_k sum_c P[k,c]; phi_c=angle(X[k*,c])",
+    "sigma_information": {
+      "value": 0.010496195706359327,
+      "source": "robust scale of 588 absolute within-recording pairwise I differences from 98 reference recordings"
+    },
+    "sigma_angular_frequency": {
+      "value": 3635.9420568674946,
+      "source": "robust scale of 588 absolute within-recording pairwise omega differences from 98 reference recordings"
+    },
+    "sigma_scale_rule": "1.4826*MAD when >1e-12; otherwise population standard deviation when >1e-12; otherwise 1.0",
+    "exchange_equation": "M_ij=g*exp(-(I_i-I_j)^2/(2*sigma_I^2))*exp(-(omega_i-omega_j)^2/(2*sigma_omega^2))*cos(phi_i-phi_j)^2",
+    "constants": {
+      "coupling_g": 1.0,
+      "densification_eta": 1.0,
+      "scale_floor": 1e-12
+    },
+    "matrix": {
+      "shape": [
+        4,
+        4
+      ],
+      "channel_order": [
+        "bearing_1",
+        "bearing_2",
+        "bearing_3",
+        "bearing_4"
+      ],
+      "symmetric": true,
+      "directed": false,
+      "diagonal": 0.0,
+      "normalization": "no post-construction normalization; Gaussian and cosine-squared terms bound off-diagonal values to [0,1] for g=1"
+    },
+    "densification": "exp(eta*mean(M_ij for i<j)); calculated by adapter but not used in IMS score",
+    "healthy_reference_matrix": "elementwise median of the 98 reference exchange matrices",
+    "distance_equation_identifier": "upper_triangle_root_mean_square_exchange_distance_v1",
+    "distance_equation": "sqrt((1/6)*sum_{i<j}(M_ij-reference_M_ij)^2)",
+    "config_label_correction": "The config says Frobenius distance, but executed code computes upper-triangle RMS. This export follows code.",
+    "fitted_values_not_preserved": [
+      "reference channel scales",
+      "4x4 reference exchange matrix"
+    ],
+    "implementation": [
+      "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/features/mcift_adapter.py#L47-L109",
+      "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L42-L91",
+      "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/runner.py#L124-L133"
+    ]
+  },
+  "normalization": {
+    "mcift": {
+      "fit_partition": "recordings 0-97 only",
+      "center": "per-recording, per-channel arithmetic mean",
+      "scale": "per-channel median reference RMS with <=1e-12 fallback to 1.0",
+      "global_or_per_feature": "per channel",
+      "clipping_or_winsorization": "none",
+      "recalculated_after_index_97": false,
+      "calibration_98_195_effect": "threshold only",
+      "fitted_channel_scales": "Not verifiable from the preserved run"
+    },
+    "conventional": {
+      "fit_partition": "recordings 0-97 only",
+      "center": "per-feature median over 98 reference feature vectors",
+      "scale": "per-feature 1.4826*MAD; if <=1e-12 use population standard deviation; if still <=1e-12 use 1.0",
+      "formula": "z_j=(f_j-center_j)/scale_j; score=max_j(abs(z_j))",
+      "global_or_per_feature": "per feature (24 centers and scales)",
+      "clipping_or_winsorization": "none",
+      "recalculated_after_index_97": false,
+      "calibration_98_195_effect": "threshold only",
+      "fitted_centers_and_scales": "Not verifiable from the preserved run",
+      "robust_standardized_meaning": "median/MAD with the documented standard-deviation and unit fallbacks"
+    }
+  },
+  "thresholds": {
+    "fit_partition": "recordings 98-195 inclusive",
+    "probability": 0.995,
+    "numpy_version": "2.2.1",
+    "quantile_method": "linear (NumPy 2.2.1 default): h=(n-1)q; interpolate between sorted floor(h) and ceil(h)",
+    "for_n_98": "h=96.515, so 0.485*x_sorted[96] + 0.515*x_sorted[97]",
+    "comparison": "strict score > threshold; equality/ties are negative",
+    "mcift": 0.3310462580442802,
+    "conventional": 5.841765941775609,
+    "frozen_during_evaluation": true
+  },
+  "persistence_and_timing": {
+    "consecutive_positive_count": 3,
+    "negative_resets_counter": true,
+    "partition_boundary_reset": false,
+    "evaluation_scope": "the full 984-recording Boolean sequence, including reference and calibration",
+    "returned_index": "first positive index of the first qualifying three-positive run",
+    "reported_timestamp": "timestamp of that first positive, not the third confirming observation",
+    "lead_recordings_formula": "983 - stable_warning_start_index",
+    "lead_recordings_meaning": "number of later ten-minute timestamp intervals through the final recording",
+    "lead_minutes_formula": "lead_recordings * 10",
+    "mcift_lead_recordings": 451,
+    "mcift_lead_minutes": 4510,
+    "three_recording_wording": "Three sampled observations at ten-minute spacing span 20 minutes from the first timestamp to the third timestamp."
+  },
+  "missing_data_policy": {
+    "missing_recording_file": "Fails if discovered file count is not exactly 984; no skip or imputation.",
+    "empty_file": "np.loadtxt or the exact-shape check fails; run stops.",
+    "malformed_row": "np.loadtxt or the exact-shape check fails; run stops.",
+    "non_numeric_value": "np.loadtxt fails; run stops.",
+    "nan": "No explicit raw-input check. np.loadtxt accepts NaN; downstream behavior is partition- and operation-dependent, with no warning or imputation policy.",
+    "positive_or_negative_infinity": "No explicit raw-input check. Values may propagate or trigger MCIFT reference-scale validation; no uniform policy exists.",
+    "wrong_waveform_sample_count": "Exact shape (20480, 4) check fails; run stops.",
+    "duplicate_timestamp": "No validation. Timestamp is an unparsed filename string; duplicate strings would continue as separate rows.",
+    "out_of_order_timestamp": "Paths are lexicographically sorted; timestamps are not parsed or checked. No explicit temporal reorder policy exists.",
+    "unexpected_column_count": "Exact shape (20480, 4) check fails; run stops.",
+    "zero_variance_recording": "No rejection. RMS, peak-to-peak, crest factor, entropy, and band energy become zero, but SciPy kurtosis becomes NaN; downstream conventional score can become NaN. MCIFT has explicit scale/zero-power fallbacks.",
+    "partially_readable_file": "If parsing or exact shape fails, run stops; there is no partial-record continuation path.",
+    "logging": "No warning-only malformed-input path is implemented.",
+    "implementation": "https://github.com/corpobear/MCIFT-Benchmarks/blob/731c249288d67dac4e3a10792980ec99be1de34d/benchmarks/src/mcift_benchmarks/datasets/ims.py#L91-L107"
+  },
+  "observed_data_quality": {
+    "expected_recordings": 984,
+    "loaded_recordings": 984,
+    "missing_recordings": 0,
+    "rejected_recordings": 0,
+    "malformed_recordings_detected_by_loader": 0,
+    "imputed_recordings": 0,
+    "raw_waveform_non_finite_values": "Not verifiable from the preserved run",
+    "derived_score_non_finite_values": 0,
+    "duplicate_timestamps_in_scores": 0,
+    "chronological_regressions_in_scores": 0,
+    "reordered_timestamps_by_executed_code": 0,
+    "observed_inter_recording_intervals": {
+      "count": 983,
+      "minimum_minutes": 10.0,
+      "maximum_minutes": 10.0,
+      "ten_minute_count": 983,
+      "other_count": 0
+    },
+    "evidence_limit": "The loader was fail-fast and produced 984 score rows, so no file was skipped, rejected, or imputed. It did not instrument raw non-finite-value counts."
+  },
+  "unverifiable_from_preserved_run": [
+    "accelerometer direction",
+    "bearing-specific end-of-test fault label",
+    "reason for choosing the channels (the code uses all four)",
+    "raw waveform non-finite-value count",
+    "fitted conventional centers and scales",
+    "fitted MCIFT channel scales and reference exchange matrix"
+  ]
+}

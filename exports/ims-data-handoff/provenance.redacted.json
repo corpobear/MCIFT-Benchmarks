@@ -1,0 +1,40 @@
+{
+  "schema_version": "2.0",
+  "benchmark_name": "ims-early-warning",
+  "benchmark_version": "ims-set2-v1",
+  "run_id": "ims-20260718-approved-v1",
+  "dataset_name": "nasa-ims-bearing",
+  "dataset_manifest_sha256": "ec44367d57a672dec140eeec2870d1916f80672d6a5cdc2d8b5fd2ca43aaec21",
+  "repository_url": "https://github.com/corpobear/MCIFT-Benchmarks",
+  "methodology_source_commit": "731c249288d67dac4e3a10792980ec99be1de34d",
+  "dirty_worktree_at_execution": false,
+  "config_name": "ims-set2-v1.yaml",
+  "config_sha256": "efff5b906c793bcb5872f33632596f0a6ac21bd1be6419706109e8b0d9d780b8",
+  "python_version": "3.12.13",
+  "dependencies": {
+    "numpy": "2.2.1",
+    "pandas": "2.2.3",
+    "scipy": "1.15.0"
+  },
+  "started_at_utc": "2026-07-18T18:31:18.864811+00:00",
+  "completed_at_utc": "2026-07-18T18:33:52.434327+00:00",
+  "exported_at_utc": "2026-07-19T06:15:17.883003+00:00",
+  "seed": 20260101,
+  "execution_status": "completed",
+  "scientific_review_status": "unapproved",
+  "run_id_approved_token": "internal artifact label only",
+  "verified_artifacts": {
+    "summary.json": "1c6a08585b88013ebce956988f2189fd06fba2eb86a1d1ad0c965508bf4b5b08",
+    "scores.csv": "d6c717e0bfeb3d7a97e57910feae7a0fc02a890c917db4fc8b10676082727ed8"
+  },
+  "redacted_fields": [
+    "input_location",
+    "output_location",
+    "local_config_path",
+    "image_reference",
+    "image_digest",
+    "azure_resource_type",
+    "azure_compute_size",
+    "Azure resource identifiers"
+  ]
+}
