@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IMS six-gate recording result",
+  "type": "object",
+  "required": [
+    "timestamp", "relative_filename", "sequence_index", "global_exchange_score",
+    "maximum_local_edge_score", "final_decision", "screening_positive",
+    "persistent_mcift_warning", "high_confidence_ims_warning",
+    "gate_global_deformation_available", "gate_local_relationship_damage_available",
+    "gate_persistence_available", "gate_directional_consistency_available",
+    "gate_robust_progression_available", "gate_conventional_vibration_agreement_available"
+  ],
+  "properties": {
+    "timestamp": {"type": "string"},
+    "relative_filename": {"type": "string"},
+    "sequence_index": {"type": "integer", "minimum": 0},
+    "global_exchange_score": {"type": "number"},
+    "maximum_local_edge_score": {"type": "number"},
+    "final_decision": {"type": "string"}
+  },
+  "additionalProperties": true
+}

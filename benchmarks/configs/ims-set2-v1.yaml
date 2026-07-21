@@ -1,34 +1,37 @@
 benchmark:
-  name: ims-early-warning
+  name: ims-six-gate-local
   version: ims-set2-v1
-  status: unresolved-scientific-protocol
+  status: frozen-local-protocol
 dataset:
-  identifier: nasa-ims-bearing
+  dataset_id: nasa-ims-bearing
+  dataset_variant: test-set-2
   expected_source: "NASA Prognostics Data Repository / IMS Bearings"
   recording_set: 2
-  channels: [bearing_1, bearing_2, bearing_3, bearing_4]
+  channel_names: [bearing_1, bearing_2, bearing_3, bearing_4]
+  channel_units: [unknown_raw_acceleration_unit, unknown_raw_acceleration_unit, unknown_raw_acceleration_unit, unknown_raw_acceleration_unit]
   sampling_rate_hz: 20000
   samples_per_recording: 20480
+  timestamp_rule: filename-%Y.%m.%d.%H.%M.%S
   sampling_rate_source: "NASA NTRS 20205001055 reports 20 kHz; operator must reconcile the 20,480 samples/file against the bundled README at staging"
-preprocessing:
-  detrend: unresolved
-  window_samples: unresolved
-  overlap: unresolved
-conventional_features:
-  - rms
-  - peak_to_peak
-  - kurtosis
-  - crest_factor
-  - spectral_entropy
-  - frequency_band_energy
+  documented_failure_timestamp: null
+  documented_failure_recording: null
+  terminal_recording_timestamp: "2004-02-19T06:22:39Z"
+split:
+  reference_range: [0, 96]
+  calibration_range: [96, 352]
+  healthy_holdout_range: [352, 448]
+  evaluation_range: [448, null]
 mcift:
-  adapter: unresolved
-  status: blocks-run
-threshold_policy:
-  method: unresolved
-  healthy_reference_period: unresolved
-  stable_warning_definition: unresolved
-  false_alarm_definition: unresolved
+  processing_profile: mcift.exchange.vibration.v1
+  gate_profile: mcift.gates.ims-six-gate.v1
+  minimum_version: 0.1.0.dev3
+  history_maxlen: 32
+  calibration_sequence_order: chronological
+analysis:
+  sustained_durations: [3, 5, 10]
+  damaged_bearing: bearing_1
+  baseline_quantile: 0.995
 output:
-  schema: schemas/result-summary.schema.json
+  root: artifacts
+random_seed: 20260101
 seed: 20260101

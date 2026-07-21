@@ -14,6 +14,9 @@ data/
 datasets/manifests/*.json
 !datasets/manifests/.gitkeep
 reports/generated/
+artifacts/
+benchmarks/artifacts/
+tmp/
 site/
 .azure/
 infra/bicep/main.json
