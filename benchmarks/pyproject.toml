@@ -6,13 +6,16 @@ build-backend = "hatchling.build"
 name = "mcift-benchmarks"
 version = "0.1.0"
 description = "Reproducible scaffolding for proposed MCIFT public benchmarks"
-requires-python = ">=3.12,<3.13"
+requires-python = ">=3.11,<3.14"
 license = {text = "AGPL-3.0-only"}
 dependencies = [
   "azure-identity==1.19.0",
   "azure-storage-blob==12.24.0",
   "jsonschema==4.23.0",
   "numpy==2.2.1",
+  "matplotlib==3.10.0",
+  "packaging==24.2",
+  "psutil==6.1.1",
   "PyYAML==6.0.2",
   "scipy==1.15.0",
 ]
@@ -28,6 +31,7 @@ dev = [
 
 [project.scripts]
 mcift-benchmarks = "mcift_benchmarks.cli:main"
+mcift-ims-benchmark = "mcift_benchmarks.ims:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mcift_benchmarks"]
@@ -40,11 +44,11 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.11"
 strict = true
 
 [[tool.mypy.overrides]]
-module = ["scipy.*"]
+module = ["scipy.*", "psutil"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
