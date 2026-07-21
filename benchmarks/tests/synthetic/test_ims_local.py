@@ -167,6 +167,22 @@ def test_false_positive_lead_time_and_localization_metrics() -> None:
     assert localization_metrics(rows, "bearing_1")["top_1_channel_accuracy"] == 1.0
 
 
+def test_localization_metrics_allows_positive_with_no_candidates() -> None:
+    rows = [
+        {
+            "sequence_index": 0,
+            "screening_positive": True,
+            "candidate_nodes": [],
+            "candidate_edges": [],
+            "g6_triggered_channels": [],
+        }
+    ]
+    metrics = localization_metrics(rows, "bearing_1")
+    assert metrics["positive_recordings"] == 1
+    assert metrics["top_1_channel_accuracy"] == 0.0
+    assert metrics["top_2_channel_coverage"] == 0.0
+
+
 def test_synthetic_end_to_end_and_output_schema(tmp_path: Path) -> None:
     dataset = tmp_path / "data"
     _write_dataset(dataset, 20)

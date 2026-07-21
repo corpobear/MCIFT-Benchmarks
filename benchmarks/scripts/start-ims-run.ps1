@@ -4,6 +4,7 @@ param(
     [string]$MciftRepo = "../../MCIFT",
     [string]$OutputRoot = "artifacts",
     [string]$RunId,
+    [switch]$Resume,
     [string]$Python = "python"
 )
 
@@ -32,6 +33,7 @@ $processArguments = @(
     "-LogPath", $logPath,
     "-StatusPath", $statusPath
 )
+if ($Resume) { $processArguments += "-Resume" }
 $process = Start-Process -FilePath "powershell" -ArgumentList $processArguments -PassThru -WindowStyle Hidden
 @{
     run_id = $RunId

@@ -4,6 +4,7 @@ param(
     [string]$MciftRepo = "../../MCIFT",
     [string]$OutputRoot = "artifacts",
     [string]$RunId,
+    [switch]$Resume,
     [string]$Python = "python",
     [Parameter(Mandatory = $true)][string]$LogPath,
     [Parameter(Mandatory = $true)][string]$StatusPath
@@ -18,6 +19,7 @@ $arguments = @(
     "--output-root", $OutputRoot
 )
 if ($RunId) { $arguments += @("--run-id", $RunId) }
+if ($Resume) { $arguments += "--resume" }
 
 try {
     & $Python @arguments *>> $LogPath

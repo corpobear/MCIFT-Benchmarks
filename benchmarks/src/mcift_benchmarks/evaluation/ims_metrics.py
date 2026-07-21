@@ -167,7 +167,11 @@ def localization_metrics(rows: list[dict[str, Any]], damaged_bearing: str | None
         ),
         None,
     )
-    top1 = [row.get("candidate_nodes", [None])[0] == damaged_bearing for row in positives]
+    top1 = [
+        bool(row.get("candidate_nodes"))
+        and row["candidate_nodes"][0] == damaged_bearing
+        for row in positives
+    ]
     top2 = [damaged_bearing in row.get("candidate_nodes", [])[:2] for row in positives]
     denominator = len(positives)
     return {
